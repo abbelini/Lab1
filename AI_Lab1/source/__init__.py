@@ -4,8 +4,8 @@ from source.Neuron import neuron
 from asyncore import loop
 '''
 from source.Network import network
-inputNeuronsCount = 1
-hiddenNeuronsCount = 1
+inputNeuronsCount = 3
+hiddenNeuronsCount = 10
 outputNeuronsCount = 1
 i=0
 

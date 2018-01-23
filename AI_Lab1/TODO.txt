@@ -1,0 +1,7 @@
+Marie:
+Layer (haller koll pa neurons, kallar pa dom i ordning)
+Neuron (haller koll pa sina egna vikter till lagret till vanster + sin egna vikt. Beraknar sin output, )
+Albert:
+
+Network (kallar pa layers i ordning layer[1].neuron)
+File hantering och skapa testdata och skicka det till network. K-uppdelning

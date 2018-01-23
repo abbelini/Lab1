@@ -3,7 +3,7 @@ Created on 22 jan. 2018
 
 @author: Albert
 '''
-
+import numpy as np
 class NN():
 
     
@@ -17,4 +17,7 @@ class NN():
         
 
     def Activate(self):
-        print("Do the stuff")
+        tempoutput = 0
+        for neuron in self.inputs:
+            tempoutput += neuron.weight * neuron.output
+        self.output = tempoutput

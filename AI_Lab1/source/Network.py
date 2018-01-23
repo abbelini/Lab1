@@ -28,6 +28,7 @@ class network(object):
         for x in range(0, num_output):
             self.outputLayer.neuronlist.append(NN())
         
+        
     def Activate(self):
         self.inputLayer.Activate();
         self.hiddenLayer.Activate();
