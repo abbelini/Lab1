@@ -13,25 +13,30 @@ testinput = list()
 testoutput = list()
 file = open("Titanic.dat")
 i = 0
+TEST_SIZE = 700
 for line in file:
     Class,Age,Sex,Survived = line.split(',')
     Survived = float(Survived)
-    if i < 700:
+
+    if i < TEST_SIZE:
         testinput.append([float(Class),float(Age),float(Sex)])
     else:
         traininginput.append([float(Class),float(Age),float(Sex)])
     if Survived == 1.0:
-        if i < 700:
-            testoutput.append(0.75)
+        if i < TEST_SIZE:
+            testoutput.append([0.75])
         else:
-            trainingoutput.append(0.75)
+            trainingoutput.append([0.75])
     else:
-        if i < 700:
-            testoutput.append(0.25)
+        if i < TEST_SIZE:
+            testoutput.append([0.25])
         else:
-            trainingoutput.append(0.25)
-    i =+ 1
-
+            trainingoutput.append([0.25])
+    i += 1
+traininginput = np.asarray(traininginput)
+trainingoutput = np.asarray(trainingoutput)
+testinput = np.asarray(testinput)
+testoutput = np.asarray(testoutput)
 
 X = np.array([[0,0,1],
             [0,1,1],
@@ -46,18 +51,19 @@ y = np.array([[0],
 np.random.seed(1)
 
 # randomly initialize our weights with mean 0
-syn0 = 2*np.random.random((3,4)) - 1
-syn1 = 2*np.random.random((4,1)) - 1
+syn0 = 2*np.random.random((3,5)) - 1
+syn1 = 2*np.random.random((5,1)) - 1
 
-for j in range(60000):
+for j in range(160000):
 
     # Feed forward through layers 0, 1, and 2
-    l0 = X
+    l0 = traininginput
     l1 = nonlin(np.dot(l0,syn0))
     l2 = nonlin(np.dot(l1,syn1))
+    
 
     # how much did we miss the target value?
-    l2_error = y - l2
+    l2_error = trainingoutput - l2
     
     if (j% 10000) == 0:
         print ("Error:" + str(np.mean(np.abs(l2_error))))
@@ -73,5 +79,6 @@ for j in range(60000):
     # were we really sure? if so, don't change too much.
     l1_delta = l1_error * nonlin(l1,deriv=True)
 
-    syn1 += l1.T.dot(l2_delta)
-    syn0 += l0.T.dot(l1_delta)
+    syn1 += (l1.T.dot(l2_delta))*0.005
+    syn0 += (l0.T.dot(l1_delta))*0.005
+print("Done")
