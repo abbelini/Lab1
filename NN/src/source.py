@@ -42,12 +42,12 @@ np.random.seed()
 
 # randomly initialize our weights with mean 0
 syn0 = 2*np.random.random((3,NUM_HIDDENLAYER_1)) - 1
-#w0_1 = 2*np.random.random(NUM_HIDDENLAYER_1) - 1
+w0_1 = 2*np.random.random(NUM_HIDDENLAYER_1) - 1
 
 syn1 = 2*np.random.random((NUM_HIDDENLAYER_1,NUM_HIDDENLAYER_2)) - 1
-#w0_2 = 2*np.random.random(NUM_HIDDENLAYER_2) - 1
+w0_2 = 2*np.random.random(NUM_HIDDENLAYER_2) - 1
 syn2 = 2*np.random.random((NUM_HIDDENLAYER_2,1)) - 1
-#w0_3 = 2*np.random.random(1) - 1
+w0_3 = 2*np.random.random(1) - 1
 
 for j in range(120000):
 
@@ -55,31 +55,38 @@ for j in range(120000):
 
     # Feed forward through layers 0, 1, 2 and 3
     Input_Layer = traininginput
-    Hidden_Layer_1 = nonlin((np.dot(Input_Layer,syn0)))#w0_1
-    Hidden_Layer_2 = nonlin((np.dot(Hidden_Layer_1,syn1)))#w0_2
-    Output_Layer = nonlin((np.dot(Hidden_Layer_2,syn2)))#w0_3
+#     Hidden_Layer_1 = nonlin((np.dot(Input_Layer,syn0)))#w0_1
+#     print("No w0:")
+#     print(Hidden_Layer_1)
+    
+    Hidden_Layer_1 = nonlin((np.dot(Input_Layer,syn0)+w0_1))#w0_1
+#     print("Yes w0:")
+#     print(Hidden_Layer_1)
+    Hidden_Layer_2 = nonlin((np.dot(Hidden_Layer_1,syn1)+w0_2))#w0_2
+    Output_Layer = nonlin((np.dot(Hidden_Layer_2,syn2)+w0_3))#w0_3
     
 
 
     l3_error = trainingoutput - Output_Layer
     l3_delta = l3_error*nonlin(Output_Layer,deriv=True)
-    #w0_3_delta = l3_error*LEARN_RATE
+    w0_3_delta = l3_delta*LEARN_RATE
     
     if (j% 10000) == 0:
         print ("Error:" + str(np.mean(np.abs(l3_error))))
         
     l2_error = l3_delta.dot(syn2.T)
     l2_delta = l2_error * nonlin(Hidden_Layer_2,deriv=True)
-    #w0_2_delta = l2_error*LEARN_RATE
+    w0_2_delta = l2_delta*LEARN_RATE
     
     l1_error = l2_delta.dot(syn1.T)
     l1_delta = l1_error * nonlin(Hidden_Layer_1,deriv=True)
-    #w0_1_delta = l1_error*LEARN_RATE
-    #w0_3 += np.sum(w0_3_delta, axis=0)
+    w0_1_delta = l1_delta*LEARN_RATE
+
+    w0_3 += np.sum(w0_3_delta, axis=0)
     syn2 += (Hidden_Layer_2.T.dot(l3_delta)*LEARN_RATE)
-    #w0_2 += np.sum(w0_2_delta, axis=0)
+    w0_2 += np.sum(w0_2_delta, axis=0)
     syn1 += (Hidden_Layer_1.T.dot(l2_delta)*LEARN_RATE)
-    #w0_1 += np.sum(w0_1_delta, axis=0)
+    w0_1 += np.sum(w0_1_delta, axis=0)
     syn0 += (Input_Layer.T.dot(l1_delta)*LEARN_RATE)
 print("Done,Starting test")
 
