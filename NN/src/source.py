@@ -38,7 +38,8 @@ trainingoutput = np.asarray(trainingoutput)
 testinput = np.asarray(testinput)
 testoutput = np.asarray(testoutput)
 
-np.random.seed()
+
+np.random.seed(5000)
 
 # randomly initialize our weights with mean 0
 syn0 = 2*np.random.random((3,NUM_HIDDENLAYER_1)) - 1
@@ -55,17 +56,9 @@ for j in range(120000):
 
     # Feed forward through layers 0, 1, 2 and 3
     Input_Layer = traininginput
-#     Hidden_Layer_1 = nonlin((np.dot(Input_Layer,syn0)))#w0_1
-#     print("No w0:")
-#     print(Hidden_Layer_1)
-    
     Hidden_Layer_1 = nonlin((np.dot(Input_Layer,syn0)+w0_1))#w0_1
-#     print("Yes w0:")
-#     print(Hidden_Layer_1)
     Hidden_Layer_2 = nonlin((np.dot(Hidden_Layer_1,syn1)+w0_2))#w0_2
     Output_Layer = nonlin((np.dot(Hidden_Layer_2,syn2)+w0_3))#w0_3
-    
-
 
     l3_error = trainingoutput - Output_Layer
     l3_delta = l3_error*nonlin(Output_Layer,deriv=True)
@@ -91,6 +84,10 @@ for j in range(120000):
 print("Done,Starting test")
 
 rightanswers=0
+Expected_Survived=0
+Expected_Died=0
+Actual_Survived=0
+Actual_Died=0
 wronganswers=0
 Input_Layer = testinput
 Hidden_Layer_1 = nonlin((np.dot(Input_Layer,syn0)))#w0_1
@@ -104,6 +101,28 @@ for j in range(700):
         rightanswers = rightanswers + 1 #Right
     else:
         wronganswers = wronganswers + 1 #Wrong
+    if Output_Layer[j]>=0.5:
+        Expected_Survived+=1
+    else:
+        Expected_Died+=1
+    if testoutput[j] == 0.75:
+        Actual_Survived+=1
+    else:
+        Actual_Died+=1
+        
+Input_Layer = traininginput
+Hidden_Layer_1 = nonlin((np.dot(Input_Layer,syn0)))#w0_1
+Hidden_Layer_2 = nonlin((np.dot(Hidden_Layer_1,syn1)))#w0_2
+Output_Layer = nonlin((np.dot(Hidden_Layer_2,syn2)))#w0_3
+for j in range(1501):
+    if Output_Layer[j]>=0.5:
+        Expected_Survived+=1
+    else:
+        Expected_Died+=1
+    if trainingoutput[j] == 0.75:
+        Actual_Survived+=1
+    else:
+        Actual_Died+=1
 testinput = np.asarray(testinput)
 testoutput = np.asarray(testoutput)
 print("Right")
